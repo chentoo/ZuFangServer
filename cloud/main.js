@@ -61,7 +61,7 @@ function parseHouseDate(houseDate)
 	var commentCount = stringWithStartEnd(houseDate , 'nowrap" class="">', '</td>');
 	var updateTime 	 = stringWithStartEnd(houseDate , 'class="time">', '</td>');
 
-	console.log(url + '\ntitle:' + title + '\nuserUrl:' + userUrl + '\nnicekName:' + userNickname + '\ncommentCount:' + commentCount + '\nupdateTime:' + updateTime);
+	// console.log(url + '\ntitle:' + title + '\nuserUrl:' + userUrl + '\nnicekName:' + userNickname + '\ncommentCount:' + commentCount + '\nupdateTime:' + updateTime);
 	saveToAVOS(url, title, userUrl, userNickname, commentCount, updateTime);
 }
 
