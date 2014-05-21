@@ -1,0 +1,1 @@
+Cloud code project for 找个小房子. https://cn.avoscloud.com/docs/cloud_code_guide.html
