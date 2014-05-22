@@ -7,7 +7,7 @@ AV.Cloud.define("hello", function(request, response) {
 
 if(__production)
 {
-	AV.Cloud.setInterval("saveBaxingAds", 30, function(){
+	AV.Cloud.setInterval("saveDoubanHouse", 30, function(){
 		try
 		{
 			AV.Cloud.httpRequest({
@@ -29,6 +29,35 @@ if(__production)
 		}
 	});
 }
+
+// if(__production)
+// {
+// 	AV.Cloud.setInterval("saveHouseContentAndImages", 4, function(){
+// 		try
+// 		{
+// 			var houseQuery = new AV.Query("House");
+// 			houseQuery.doesNotExist("content");			
+// 			houseQuery.ascending("createdAt");
+// 			houseQuery.limit(1);
+// 			houseQuery.skip(1);
+// 			houseQuery.find({
+// 				success: function(houses) {
+// 					console.log('house cont' + houses.length);
+// 					var house = houses[0];
+// 					getHouseContentAndImages(house);
+// 				},
+// 				error:function(error) {
+// 					response.send(500);
+// 				}
+// 			});
+
+
+// 		} catch (err) {
+
+// 		}
+// 	});
+// }
+
 
 function parseHtml(html)
 {
@@ -114,10 +143,58 @@ function saveToAVOS(houseUrl, title, userUrl, userNickname, commentCount, update
 	}catch (err) {
 		console.dir(err);
 	}
-
 }
 
 
+
+function getHouseContentAndImages(house)
+{
+	var houseContentUrl = house.get('houseUrl');
+	try
+	{
+		AV.Cloud.httpRequest({
+			url: 'http://www.douban.com/group/topic/52848523/',
+			headers: {
+			    'User-Agent':'Mozilla/5.0 (Linux; U; Android 2.2.1; zh-cn; HTC_Wildfire_A3333 Build/FRG83D) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1'
+			},
+			success: function(httpResponse) {
+				// console.log(httpResponse.text);
+				parseContentAndImages(httpResponse.text);
+			},
+			error: function(httpResponse) {
+				console.error('Request failed with response code ' + httpResponse.status);
+			}
+		});
+	} catch (err) {
+
+	}
+}
+
+function parseContentAndImages(httpData)
+{
+	var needParse = stringWithStartEnd(httpData, '<div class="topic-content">', '<div class="sns-bar"');
+	console.log(needParse);
+	parseContent(needParse);
+}
+
+function parseContent(needParse)
+{
+	var content = stringWithStartEnd(needParse, '<', '>');
+	console.log('content' + content);
+	do{
+		var string = parseWithContentP(needParse);
+		
+	}
+
+	// needParse = needParse.substring(houseDate.indexOf(content) + content.length);
+	// while ()
+}
+
+function parseWithContentP(needParse)
+{
+	var content = stringWithStartEnd(needParse, '<p>', '</p>');
+	needParse = needParse.substring(houseDate.indexOf(content) + content.length);
+}
 
 
 
