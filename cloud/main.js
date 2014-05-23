@@ -17,7 +17,7 @@ if(__production)
 				    'User-Agent':'Mozilla/5.0 (Linux; U; Android 2.2.1; zh-cn; HTC_Wildfire_A3333 Build/FRG83D) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1'
 				},
 				success: function(httpResponse) {
-					// console.log(httpResponse.text);
+					console.log(httpResponse.text);
 					parseHtml(httpResponse.text);
 				},
 				error: function(httpResponse) {
