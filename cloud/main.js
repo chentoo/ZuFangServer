@@ -170,31 +170,31 @@ function getHouseContentAndImages(house)
 	}
 }
 
-function parseContentAndImages(httpData)
-{
-	var needParse = stringWithStartEnd(httpData, '<div class="topic-content">', '<div class="sns-bar"');
-	console.log(needParse);
-	parseContent(needParse);
-}
+// function parseContentAndImages(httpData)
+// {
+// 	var needParse = stringWithStartEnd(httpData, '<div class="topic-content">', '<div class="sns-bar"');
+// 	console.log(needParse);
+// 	parseContent(needParse);
+// }
 
-function parseContent(needParse)
-{
-	var content = stringWithStartEnd(needParse, '<', '>');
-	console.log('content' + content);
-	do{
-		var string = parseWithContentP(needParse);
+// function parseContent(needParse)
+// {
+// 	var content = stringWithStartEnd(needParse, '<', '>');
+// 	console.log('content' + content);
+// 	do{
+// 		var string = parseWithContentP(needParse);
 		
-	}
+// 	}
 
-	// needParse = needParse.substring(houseDate.indexOf(content) + content.length);
-	// while ()
-}
+// 	// needParse = needParse.substring(houseDate.indexOf(content) + content.length);
+// 	// while ()
+// }
 
-function parseWithContentP(needParse)
-{
-	var content = stringWithStartEnd(needParse, '<p>', '</p>');
-	needParse = needParse.substring(houseDate.indexOf(content) + content.length);
-}
+// function parseWithContentP(needParse)
+// {
+// 	var content = stringWithStartEnd(needParse, '<p>', '</p>');
+// 	needParse = needParse.substring(houseDate.indexOf(content) + content.length);
+// }
 
 
 
