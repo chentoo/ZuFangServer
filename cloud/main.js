@@ -179,7 +179,7 @@ function getHouseContentAndImages(house)
 function parseContentAndImages(httpData, house)
 {
 	var needParse = stringWithStartEnd(httpData, '<div class="topic-content">', '<div class="sns-bar"');
-	console.log(needParse);
+	// console.log(needParse);
 	parseContent(needParse, house);
 }
 
