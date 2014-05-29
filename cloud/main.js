@@ -30,33 +30,34 @@ if(__production)
 	});
 }
 
-// if(__production)
-// {
-// 	AV.Cloud.setInterval("saveHouseContentAndImages", 4, function(){
-// 		try
-// 		{
-// 			var houseQuery = new AV.Query("House");
-// 			houseQuery.doesNotExist("content");			
-// 			houseQuery.ascending("createdAt");
-// 			houseQuery.limit(1);
-// 			houseQuery.skip(1);
-// 			houseQuery.find({
-// 				success: function(houses) {
-// 					console.log('house cont' + houses.length);
-// 					var house = houses[0];
-// 					getHouseContentAndImages(house);
-// 				},
-// 				error:function(error) {
-// 					response.send(500);
-// 				}
-// 			});
+if(__production)
+{
+	AV.Cloud.setInterval("saveHouseContentAndImages", 4, function(){
+		try
+		{
+			var houseQuery = new AV.Query("House");
+			houseQuery.doesNotExist("content");			
+			houseQuery.ascending("createdAt");
+
+			houseQuery.limit(1);
+			houseQuery.skip(1);
+			houseQuery.find({
+				success: function(houses) {
+					console.log('house cont' + houses.length);
+					var house = houses[0];
+					getHouseContentAndImages(house);
+				},
+				error:function(error) {
+					response.send(500);
+				}
+			});
 
 
-// 		} catch (err) {
+		} catch (err) {
 
-// 		}
-// 	});
-// }
+		}
+	});
+}
 
 
 function parseHtml(html)
@@ -98,6 +99,9 @@ function stringWithStartEnd(baseString, startString, endString)
 {
 	var indexOfStart = baseString.indexOf(startString);
 	var indexOfEnd = baseString.substring(indexOfStart + startString.length).indexOf(endString);
+	if (indexOfStart == -1 || indexOfEnd == -1) {
+		return null;
+	};
 	var result = baseString.substring(indexOfStart + startString.length, indexOfStart + startString.length + indexOfEnd);
 	return result;
 }
@@ -149,17 +153,19 @@ function saveToAVOS(houseUrl, title, userUrl, userNickname, commentCount, update
 
 function getHouseContentAndImages(house)
 {
+	house.set('content', 'done');
+	house.save();
 	var houseContentUrl = house.get('houseUrl');
 	try
 	{
 		AV.Cloud.httpRequest({
-			url: 'http://www.douban.com/group/topic/52848523/',
+			url: houseContentUrl,
 			headers: {
 			    'User-Agent':'Mozilla/5.0 (Linux; U; Android 2.2.1; zh-cn; HTC_Wildfire_A3333 Build/FRG83D) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1'
 			},
 			success: function(httpResponse) {
 				// console.log(httpResponse.text);
-				parseContentAndImages(httpResponse.text);
+				parseContentAndImages(httpResponse.text, house);
 			},
 			error: function(httpResponse) {
 				console.error('Request failed with response code ' + httpResponse.status);
@@ -170,22 +176,28 @@ function getHouseContentAndImages(house)
 	}
 }
 
-// function parseContentAndImages(httpData)
-// {
-// 	var needParse = stringWithStartEnd(httpData, '<div class="topic-content">', '<div class="sns-bar"');
-// 	console.log(needParse);
-// 	parseContent(needParse);
-// }
+function parseContentAndImages(httpData, house)
+{
+	var needParse = stringWithStartEnd(httpData, '<div class="topic-content">', '<div class="sns-bar"');
+	console.log(needParse);
+	parseContent(needParse, house);
+}
 
-// function parseContent(needParse)
-// {
-// 	var content = stringWithStartEnd(needParse, '<', '>');
-// 	console.log('content' + content);
-// 	do{
-// 		var string = parseWithContentP(needParse);
-		
-// 	}
-
+function parseContent(needParse, house)
+{
+	var content = stringWithStartEnd(needParse, '<div class="topic-figure cc">', '</div>');
+	if (content == null) {
+		return;
+	};
+	var imageUrl = stringWithStartEnd(content, '<img src="', '" alt=');
+	if (imageUrl != null && imageUrl != undefined && imageUrl.length > 0) {
+		console.log('imageUrl' + imageUrl+ "    ");
+		house.addUnique("images", imageUrl);
+		house.save();
+	};
+	otherText = needParse.substring(needParse.indexOf(content) + content.length);
+	parseContent(otherText, house);
+}
 // 	// needParse = needParse.substring(houseDate.indexOf(content) + content.length);
 // 	// while ()
 // }
