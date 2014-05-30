@@ -119,15 +119,19 @@ function saveToAVOS(houseUrl, title, userUrl, userNickname, commentCount, update
 			  	if(houses.length > 0)//house 存在
 			  	{
 			  		var house = houses[0];
-			  		house.set('title', title);
-			  		house.set("updateTime", updateTime);
-			  		house.save(null, {
-					success: function(thisHouse) {
-					  	console.log("-----【更新存储数据】-----【更新House】-----✓✓✓ 保存成功:" + houseUrl);
-					},
-					error: function(thisHouse, error) {
-					  	console.log("-----【更新存储数据】-----【更新House】-----XXX 保存失败" + error)
-					}});
+			  		if (house.get('title') != title) {
+						console.log("-----title:" + title + "old title:" + house.get('title'));
+				  		house.set('title', title);
+				  		house.set("updateTime", updateTime);
+				  		house.save(null, {
+						success: function(thisHouse) {
+						  	console.log("-----【更新存储数据】-----【更新House】-----✓✓✓ 保存成功:" + houseUrl);
+						},
+						error: function(thisHouse, error) {
+						  	console.log("-----【更新存储数据】-----【更新House】-----XXX 保存失败" + error)
+						}});
+
+			  		};
 				}
 			  	else
 			  	{
