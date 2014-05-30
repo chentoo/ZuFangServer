@@ -162,6 +162,7 @@ function saveToAVOS(houseUrl, title, userUrl, userNickname, commentCount, update
 
 function getHouseContentAndImages(house)
 {
+	console.log("getHouseContentAndImages  -  " + house.get('title'));
 	house.set('content', 'done');
 	house.save();
 	var houseContentUrl = house.get('houseUrl');
