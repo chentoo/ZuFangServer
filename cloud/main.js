@@ -43,9 +43,10 @@ if(__production)
 			houseQuery.skip(1);
 			houseQuery.find({
 				success: function(houses) {
-					console.log('house cont' + houses.length);
-					var house = houses[0];
-					getHouseContentAndImages(house);
+					if (houses.length > 0) {
+						var house = houses[0];
+						getHouseContentAndImages(house);
+					};
 				},
 				error:function(error) {
 					response.send(500);
@@ -162,7 +163,6 @@ function saveToAVOS(houseUrl, title, userUrl, userNickname, commentCount, update
 
 function getHouseContentAndImages(house)
 {
-	console.log("getHouseContentAndImages  -  " + house.get('title'));
 	house.set('content', 'done');
 	house.save();
 	var houseContentUrl = house.get('houseUrl');
